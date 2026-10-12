@@ -1,0 +1,185 @@
+<mxfile host="65bd71144e">
+    <diagram name="ERD Sistem Klinik" id="0">
+        <mxGraphModel dx="775" dy="581" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="820" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="users" vertex="1">
+                    <mxGeometry height="50" width="160" x="45" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="poli" vertex="1">
+                    <mxGeometry height="50" width="160" x="245" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="pasien" vertex="1">
+                    <mxGeometry height="50" width="160" x="445" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="obat" vertex="1">
+                    <mxGeometry height="50" width="160" x="645" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="dokter" vertex="1">
+                    <mxGeometry height="50" width="160" x="345" y="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="kunjungan" vertex="1">
+                    <mxGeometry height="50" width="160" x="345" y="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="tanda_vital" vertex="1">
+                    <mxGeometry height="50" width="160" x="45" y="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="rekam_medis" vertex="1">
+                    <mxGeometry height="50" width="160" x="245" y="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="resep" vertex="1">
+                    <mxGeometry height="50" width="160" x="445" y="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="tagihan" vertex="1">
+                    <mxGeometry height="50" width="160" x="645" y="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="diagnosis" vertex="1">
+                    <mxGeometry height="50" width="160" x="45" y="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="resep_detail" vertex="1">
+                    <mxGeometry height="50" width="160" x="245" y="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="tagihan_detail" vertex="1">
+                    <mxGeometry height="50" width="160" x="445" y="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;fontSize=12;" value="pembayaran" vertex="1">
+                    <mxGeometry height="50" width="160" x="645" y="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="100" edge="1" parent="0" source="10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="14" value="user_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="425" y="140" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="101" edge="1" parent="0" source="11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="14" value="poli_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="425" y="140" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="102" edge="1" parent="0" source="12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="15" value="pasien_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="425" y="260" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="103" edge="1" parent="0" source="11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="15" value="poli_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="425" y="260" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="104" edge="1" parent="0" source="14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="15" value="dokter_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="425" y="260" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="105" edge="1" parent="0" source="10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="15" value="user_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="425" y="260" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="106" edge="1" parent="0" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="16" value="kunjungan_id (1:1)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="125" y="380" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="107" edge="1" parent="0" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="17" value="kunjungan_id (1:1)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="325" y="380" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="108" edge="1" parent="0" source="14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="17" value="dokter_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="325" y="380" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="109" edge="1" parent="0" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="18" value="kunjungan_id (1:1)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="525" y="380" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="110" edge="1" parent="0" source="14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="18" value="dokter_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="525" y="380" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="111" edge="1" parent="0" source="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="19" value="kunjungan_id (1:1)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="725" y="380" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="112" edge="1" parent="0" source="17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="20" value="rekam_medis_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="125" y="500" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="113" edge="1" parent="0" source="18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="21" value="resep_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="325" y="500" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="114" edge="1" parent="0" source="13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="21" value="obat_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="325" y="500" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="115" edge="1" parent="0" source="19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="22" value="tagihan_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="525" y="500" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="116" edge="1" parent="0" source="19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="23" value="tagihan_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="725" y="500" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="117" edge="1" parent="0" source="10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="23" value="kasir_id (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="725" y="500" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="118" edge="1" parent="0" source="10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;strokeColor=#000000;strokeWidth=1;endArrow=block;endFill=1;startArrow=none;" target="16" value="dicatat_oleh (1:N)">
+                    <mxGeometry as="geometry">
+                        <Array as="points">
+                            <mxPoint x="125" y="380" as="geometry"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,9 +1,111 @@
-@import 'tailwindcss';
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+@import "tailwindcss";
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-primary-50: #F0FDFA;
+    --color-primary-100: #CCFBF1;
+    --color-primary-500: #14B8A6;
+    --color-primary-600: #0D9488;
+    --color-primary-700: #0F766E;
+    --color-primary-900: #134E4A;
+    --color-bg: #F1F5F9;
+    --color-surface: #FFFFFF;
+    --color-border: #CBD5E1;
+    --color-text: #0F172A;
+    --color-text-muted: #64748B;
+    --color-success: #15803D;
+    --color-warning: #B45309;
+    --color-danger: #B91C1C;
+    --color-info: #1D4ED8;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, .10), 0 1px 2px rgba(15, 23, 42, .08);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, .12), 0 1px 3px rgba(15, 23, 42, .08);
+    --shadow-lg: 0 12px 32px rgba(15, 23, 42, .18);
+    --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+    html { font-family: var(--font-sans); }
+    body { background: var(--color-bg); color: var(--color-text); font-variant-ligatures: common-ligatures; }
+    *:focus-visible { outline: 2px solid var(--color-primary-600); outline-offset: 2px; }
+    ::selection { background: var(--color-primary-100); }
+}
+
+@layer components {
+    .select-input {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.6rem center;
+        background-size: 1rem;
+    }
+
+    /* Flatpickr — ikut theme teal klinik */
+    .flatpickr-calendar {
+        border-radius: var(--radius-md) !important;
+        box-shadow: var(--shadow-md) !important;
+        border: 1px solid var(--color-border);
+        font-family: var(--font-sans);
+    }
+    .flatpickr-months .flatpickr-month {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-primary-600) !important;
+        color: #fff;
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+    div.flatpickr-calendar .flatpickr-current-month {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+        padding: 10px !important;
+        font-size: 14px !important;
+        font-family: var(--font-sans);
+    }
+    div.flatpickr-calendar .flatpickr-current-month .flatpickr-monthDropdown-months,
+    div.flatpickr-calendar .flatpickr-current-month .flatpickr-monthDropdown-months:active,
+    div.flatpickr-calendar .flatpickr-current-month input.cur-year {
+        padding: 0 !important;
+        font-size: 14px !important;
+        font-family: var(--font-sans);
+        height: auto;
+    }
+    .flatpickr-months .flatpickr-prev-month,
+    .flatpickr-months .flatpickr-next-month {
+        fill: #fff;
+    }
+    .flatpickr-months .flatpickr-month:hover svg,
+    .flatpickr-months .flatpickr-next-month:hover svg,
+    .flatpickr-months .flatpickr-prev-month:hover svg {
+        fill: var(--color-primary-100);
+    }
+    span.flatpickr-weekday {
+        color: var(--color-text-muted);
+        font-size: 11px;
+    }
+    .flatpickr-day {
+        border-radius: var(--radius-sm);
+        color: var(--color-text);
+    }
+    .flatpickr-day:hover,
+    .flatpickr-day.flatpickr-active {
+        background: var(--color-primary-600);
+        border-color: var(--color-primary-600);
+        color: #fff;
+    }
+    .flatpickr-day.today {
+        border-color: var(--color-primary-500);
+        color: var(--color-primary-700);
+        font-weight: 600;
+    }
+    .flatpickr-day.today:hover {
+        color: #fff;
+    }
+    .flatpickr-input[readonly] {
+        background-color: var(--color-surface);
+    }
 }

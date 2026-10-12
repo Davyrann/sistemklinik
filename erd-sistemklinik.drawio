@@ -1,0 +1,157 @@
+<mxfile host="65bd71144e">
+    <diagram name="ERD-sistemklinik" id="erd1">
+        <mxGraphModel dx="2410" dy="2147" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1600" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="t_users" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;users&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;name : varchar&lt;/div&gt;&lt;div&gt;email UQ : varchar&lt;/div&gt;&lt;div&gt;password : varchar&lt;/div&gt;&lt;div&gt;role : varchar&lt;/div&gt;&lt;div&gt;email_verified_at : datetime&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="180" width="220" x="-270" y="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_poli" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;poli&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;kode UQ : varchar&lt;/div&gt;&lt;div&gt;nama : varchar&lt;/div&gt;&lt;div&gt;deskripsi : text&lt;/div&gt;&lt;div&gt;is_aktif : tinyint&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="150" width="170" x="-15" y="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_pasien" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;b&gt;pasien&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;no_rm UQ : varchar&lt;/div&gt;&lt;div&gt;nik UQ : varchar&lt;/div&gt;&lt;div&gt;nama : varchar&lt;/div&gt;&lt;div&gt;tgl_lahir : date&lt;/div&gt;&lt;div&gt;jk : varchar&lt;/div&gt;&lt;div&gt;alamat : text&lt;/div&gt;&lt;div&gt;telp : varchar&lt;/div&gt;&lt;div&gt;gol_darah : varchar&lt;/div&gt;&lt;div&gt;alergi : text&lt;/div&gt;&lt;div&gt;penjamin : varchar&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="250" width="230" x="320" y="-120" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_obat" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;obat&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;kode UQ : varchar&lt;/div&gt;&lt;div&gt;nama_generik : varchar&lt;/div&gt;&lt;div&gt;nama_dagang : varchar&lt;/div&gt;&lt;div&gt;satuan : varchar&lt;/div&gt;&lt;div&gt;stok : integer&lt;/div&gt;&lt;div&gt;stok_minimum : integer&lt;/div&gt;&lt;div&gt;harga : numeric&lt;/div&gt;&lt;div&gt;is_aktif : tinyint&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="215" width="230" x="295" y="1060" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_dokter" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;b&gt;dokter&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;FK user_id : integer NULL&lt;/div&gt;&lt;div&gt;FK poli_id : integer&lt;/div&gt;&lt;div&gt;nama : varchar&lt;/div&gt;&lt;div&gt;nip UQ : varchar&lt;/div&gt;&lt;div&gt;spesialisasi : varchar&lt;/div&gt;&lt;div&gt;no_hp : varchar&lt;/div&gt;&lt;div&gt;is_aktif : tinyint&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="195" width="220" x="-40" y="660" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_kunjungan" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;b&gt;kunjungan&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;FK pasien_id : integer&lt;/div&gt;&lt;div&gt;FK dokter_id : integer NULL&lt;/div&gt;&lt;div&gt;FK poli_id : integer&lt;/div&gt;&lt;div&gt;FK user_id : integer NULL&lt;/div&gt;&lt;div&gt;tgl_kunjungan : date&lt;/div&gt;&lt;div&gt;no_antrean : varchar&lt;/div&gt;&lt;div&gt;status : varchar&lt;/div&gt;&lt;div&gt;keluhan_utama : text&lt;/div&gt;&lt;div&gt;penjamin : varchar&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="235" width="230" x="320" y="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_tanda_vital" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;" value="&lt;b&gt;tanda_vital&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;FK kunjungan_id UQ : integer&lt;/div&gt;&lt;div&gt;td_sistolik : integer&lt;/div&gt;&lt;div&gt;td_diastolik : integer&lt;/div&gt;&lt;div&gt;nadi : integer&lt;/div&gt;&lt;div&gt;suhu : numeric&lt;/div&gt;&lt;div&gt;rr : integer&lt;/div&gt;&lt;div&gt;spo2 : integer&lt;/div&gt;&lt;div&gt;bb : numeric&lt;/div&gt;&lt;div&gt;tb : numeric&lt;/div&gt;&lt;div&gt;imt : numeric&lt;/div&gt;&lt;div&gt;FK dicatat_oleh : integer NULL&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="265" width="230" x="-30" y="-150" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_rekam_medis" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;" value="&lt;b&gt;rekam_medis&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;FK kunjungan_id UQ : integer&lt;/div&gt;&lt;div&gt;FK dokter_id : integer NULL&lt;/div&gt;&lt;div&gt;subjective : text&lt;/div&gt;&lt;div&gt;objective : text&lt;/div&gt;&lt;div&gt;assessment : text&lt;/div&gt;&lt;div&gt;plan : text&lt;/div&gt;&lt;div&gt;is_locked : tinyint&lt;/div&gt;&lt;div&gt;locked_at : datetime&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="215" width="230" x="810" y="485" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_tagihan" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;tagihan&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;FK kunjungan_id UQ : integer&lt;/div&gt;&lt;div&gt;total : numeric&lt;/div&gt;&lt;div&gt;diskon : numeric&lt;/div&gt;&lt;div&gt;total_bayar : numeric&lt;/div&gt;&lt;div&gt;status : varchar&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="155" width="230" x="-590" y="450" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_resep" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;" value="&lt;b&gt;resep&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;FK kunjungan_id UQ : integer&lt;/div&gt;&lt;div&gt;FK dokter_id : integer NULL&lt;/div&gt;&lt;div&gt;status : varchar&lt;/div&gt;&lt;div&gt;catatan : text&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="140" width="230" x="-45" y="898" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_diagnosis" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;" value="&lt;b&gt;diagnosis&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;FK rekam_medis_id : integer&lt;/div&gt;&lt;div&gt;kode_icd10 : varchar&lt;/div&gt;&lt;div&gt;nama_diagnosis : varchar&lt;/div&gt;&lt;div&gt;is_primary : tinyint&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="140" width="230" x="810" y="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_tagihan_detail" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;" value="&lt;b&gt;tagihan_detail&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;FK tagihan_id : integer&lt;/div&gt;&lt;div&gt;deskripsi : varchar&lt;/div&gt;&lt;div&gt;qty : integer&lt;/div&gt;&lt;div&gt;harga_satuan : numeric&lt;/div&gt;&lt;div&gt;subtotal : numeric&lt;/div&gt;&lt;div&gt;jenis : varchar&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="175" width="230" x="-700" y="730" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_resep_detail" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;" value="&lt;b&gt;resep_detail&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;FK resep_id : integer&lt;/div&gt;&lt;div&gt;FK obat_id : integer&lt;/div&gt;&lt;div&gt;dosis : varchar&lt;/div&gt;&lt;div&gt;frekuensi : varchar&lt;/div&gt;&lt;div&gt;jumlah : integer&lt;/div&gt;&lt;div&gt;aturan_pakai : varchar&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="175" width="230" x="-45" y="1080" as="geometry"/>
+                </mxCell>
+                <mxCell id="t_pembayaran" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;align=left;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;pembayaran&lt;/b&gt;&lt;hr/&gt;&lt;div&gt;PK id : integer&lt;/div&gt;&lt;div&gt;FK tagihan_id : integer&lt;/div&gt;&lt;div&gt;metode : varchar&lt;/div&gt;&lt;div&gt;jumlah : numeric&lt;/div&gt;&lt;div&gt;tgl_bayar : datetime&lt;/div&gt;&lt;div&gt;FK kasir_id : integer NULL&lt;/div&gt;&lt;div&gt;keterangan : varchar&lt;/div&gt;" vertex="1">
+                    <mxGeometry height="175" width="230" x="-420" y="730" as="geometry"/>
+                </mxCell>
+                <mxCell id="e1" edge="1" parent="1" source="t_users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="t_dokter" value="user_id">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-160" y="760"/>
+                        </Array>
+                        <mxPoint x="-150" y="390" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e2" edge="1" parent="1" source="t_poli" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;" target="t_dokter" value="poli_id">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e3" edge="1" parent="1" source="t_pasien" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;" target="t_kunjungan" value="pasien_id">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e4" edge="1" parent="1" source="t_dokter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" value="dokter_id">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="190" y="708.8"/>
+                            <mxPoint x="190" y="700"/>
+                            <mxPoint x="455" y="700"/>
+                        </Array>
+                        <mxPoint x="200" y="680" as="sourcePoint"/>
+                        <mxPoint x="455" y="485" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e5" edge="1" parent="1" source="t_poli" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;" target="t_kunjungan" value="poli_id">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e6" edge="1" parent="1" source="t_users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;" target="t_kunjungan" value="user_id">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="435" y="210"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e7" edge="1" parent="1" source="t_kunjungan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;startArrow=ERone;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" target="t_tanda_vital" value="kunjungan_id">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e8" edge="1" parent="1" source="t_users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" target="t_tanda_vital" value="dicatat_oleh">
+                    <mxGeometry relative="1" x="0.5168" y="3" as="geometry">
+                        <mxPoint x="-1" as="offset"/>
+                        <Array as="points">
+                            <mxPoint x="-215" y="-17.5"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e9" edge="1" parent="1" source="t_kunjungan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;startArrow=ERone;" target="t_rekam_medis" value="kunjungan_id">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e10" edge="1" parent="1" source="t_dokter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=1.006;exitY=0.463;exitDx=0;exitDy=0;exitPerimeter=0;" target="t_rekam_medis" value="dokter_id">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="925" y="750.3"/>
+                        </Array>
+                        <mxPoint x="210" y="750" as="sourcePoint"/>
+                        <mxPoint x="925" y="690" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e11" edge="1" parent="1" source="t_rekam_medis" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;" target="t_diagnosis" value="rekam_medis_id">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e12" edge="1" parent="1" source="t_kunjungan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;startArrow=ERone;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="t_resep" value="kunjungan_id">
+                    <mxGeometry relative="1" x="0.3437" as="geometry">
+                        <mxPoint y="-1" as="offset"/>
+                        <Array as="points">
+                            <mxPoint x="377.5" y="550"/>
+                            <mxPoint x="260" y="550"/>
+                            <mxPoint x="260" y="950"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e13" edge="1" parent="1" source="t_dokter" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;" target="t_resep" value="dokter_id">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e14" edge="1" parent="1" source="t_resep" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;" target="t_resep_detail" value="resep_id">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e15" edge="1" parent="1" source="t_obat" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;" target="t_resep_detail" value="obat_id">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e16" edge="1" parent="1" source="t_kunjungan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERone;startArrow=ERone;exitX=-0.007;exitY=0.369;exitDx=0;exitDy=0;exitPerimeter=0;" target="t_tagihan" value="kunjungan_id">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="220" y="336.7"/>
+                            <mxPoint x="220" y="400"/>
+                            <mxPoint x="-475" y="400"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e17" edge="1" parent="1" source="t_tagihan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;" target="t_tagihan_detail" value="tagihan_id">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e18" edge="1" parent="1" source="t_tagihan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;" target="t_pembayaran" value="tagihan_id">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-310" y="527.5"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e19" edge="1" parent="1" source="t_users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=ERmany;startArrow=ERone;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" target="t_pembayaran" value="kasir_id">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-80" y="120" as="sourcePoint"/>
+                        <mxPoint x="770" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class UpdatePasienRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        $id = $this->route('pasien')?->id ?? $this->route('pasien');
+
+        return [
+            'nik' => ['nullable', 'digits:16', Rule::unique('pasien', 'nik')->ignore($id)],
+            'nama' => ['required', 'string', 'max:150'],
+            'tgl_lahir' => ['required', 'date', 'before:today'],
+            'jk' => ['required', 'in:L,P'],
+            'alamat' => ['nullable', 'string'],
+            'telp' => ['nullable', 'string', 'max:20'],
+            'gol_darah' => ['nullable', 'in:A,B,AB,O'],
+            'alergi' => ['nullable', 'string'],
+            'penjamin' => ['required', 'in:umum,bpjs,asuransi'],
+        ];
+    }
+}
