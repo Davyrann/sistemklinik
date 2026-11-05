@@ -1,37 +1,68 @@
 @import "tailwindcss";
 
 @theme {
-    --color-primary-50: #F0FDFA;
-    --color-primary-100: #CCFBF1;
-    --color-primary-500: #14B8A6;
-    --color-primary-600: #0D9488;
-    --color-primary-700: #0F766E;
-    --color-primary-900: #134E4A;
     --color-bg: #F1F5F9;
     --color-surface: #FFFFFF;
-    --color-border: #CBD5E1;
     --color-text: #0F172A;
-    --color-text-muted: #64748B;
+    --color-text-muted: #475569;
+    --color-text-subtle: #64748B;
+    --color-border: #CBD5E1;
+    --color-border-subtle: #E2E8F0;
+
+    --color-primary-50: #F0FDFA;
+    --color-primary-100: #CCFBF1;
+    --color-primary-600: #0D9488;
+    --color-primary-700: #0F766E;
+    --color-primary-800: #115E59;
+    --color-primary-900: #134E4A;
+
     --color-success: #15803D;
+    --color-success-bg: #F0FDF4;
+    --color-success-bd: #BBF7D0;
+
     --color-warning: #B45309;
+    --color-warning-bg: #FFFBEB;
+    --color-warning-bd: #FDE68A;
+
     --color-danger: #B91C1C;
+    --color-danger-bg: #FEF2F2;
+    --color-danger-bd: #FECACA;
+
     --color-info: #1D4ED8;
+    --color-info-bg: #EFF6FF;
+    --color-info-bd: #BFDBFE;
+
+    --color-neutral: #334155;
+    --color-neutral-bg: #F8FAFC;
+    --color-neutral-bd: #CBD5E1;
+
     --radius-sm: 6px;
     --radius-md: 8px;
     --radius-lg: 12px;
-    --shadow-sm: 0 1px 3px rgba(15, 23, 42, .10), 0 1px 2px rgba(15, 23, 42, .08);
-    --shadow-md: 0 4px 12px rgba(15, 23, 42, .12), 0 1px 3px rgba(15, 23, 42, .08);
+
+    --shadow-sm: 0 1px 3px rgba(15, 23, 42, .10);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, .12);
     --shadow-lg: 0 12px 32px rgba(15, 23, 42, .18);
+
     --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
+
+@custom-variant pointer-coarse (@media (pointer: coarse));
 
 @layer base {
     html { font-family: var(--font-sans); }
     body { background: var(--color-bg); color: var(--color-text); font-variant-ligatures: common-ligatures; }
     *:focus-visible { outline: 2px solid var(--color-primary-600); outline-offset: 2px; }
     ::selection { background: var(--color-primary-100); }
+
+    @media (pointer: coarse) {
+        .touch-target, button, input:not([type="checkbox"]):not([type="radio"]), select {
+            min-height: 44px;
+        }
+    }
 }
+
 
 @layer components {
     .select-input {
@@ -53,7 +84,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--color-primary-600) !important;
+        background: var(--color-primary-700) !important;
         color: #fff;
         border-radius: var(--radius-md) var(--radius-md) 0 0;
     }
@@ -93,12 +124,12 @@
     }
     .flatpickr-day:hover,
     .flatpickr-day.flatpickr-active {
-        background: var(--color-primary-600);
-        border-color: var(--color-primary-600);
+        background: var(--color-primary-700);
+        border-color: var(--color-primary-700);
         color: #fff;
     }
     .flatpickr-day.today {
-        border-color: var(--color-primary-500);
+        border-color: var(--color-primary-600);
         color: var(--color-primary-700);
         font-weight: 600;
     }
@@ -107,5 +138,64 @@
     }
     .flatpickr-input[readonly] {
         background-color: var(--color-surface);
+    }
+
+    /* Table full width and containment */
+    .table-container {
+        width: 100%;
+    }
+    .table-container table,
+    table.datatable,
+    table.dataTable {
+        width: 100% !important;
+        min-width: 100% !important;
+        border-collapse: collapse;
+    }
+
+    /* First & last cell horizontal breathing room matching DESIGN.md pl-4 sm:pl-6 & pr-4 sm:pr-6 */
+    .table-container table > thead > tr > th:first-child,
+    .table-container table > tbody > tr > td:first-child,
+    table.datatable > thead > tr > th:first-child,
+    table.datatable > tbody > tr > td:first-child,
+    table.dataTable > thead > tr > th:first-child,
+    table.dataTable > tbody > tr > td:first-child {
+        padding-left: 1.5rem !important;
+    }
+    @media (max-width: 640px) {
+        .table-container table > thead > tr > th:first-child,
+        .table-container table > tbody > tr > td:first-child,
+        table.datatable > thead > tr > th:first-child,
+        table.datatable > tbody > tr > td:first-child,
+        table.dataTable > thead > tr > th:first-child,
+        table.dataTable > tbody > tr > td:first-child {
+            padding-left: 1rem !important;
+        }
+    }
+
+    .table-container table > thead > tr > th:last-child,
+    .table-container table > tbody > tr > td:last-child,
+    table.datatable > thead > tr > th:last-child,
+    table.datatable > tbody > tr > td:last-child,
+    table.dataTable > thead > tr > th:last-child,
+    table.dataTable > tbody > tr > td:last-child {
+        padding-right: 1.5rem !important;
+    }
+    @media (max-width: 640px) {
+        .table-container table > thead > tr > th:last-child,
+        .table-container table > tbody > tr > td:last-child,
+        table.datatable > thead > tr > th:last-child,
+        table.datatable > tbody > tr > td:last-child,
+        table.dataTable > thead > tr > th:last-child,
+        table.dataTable > tbody > tr > td:last-child {
+            padding-right: 1rem !important;
+        }
+    }
+
+    .table-container table td[colspan],
+    table.datatable td[colspan],
+    table.dataTable td[colspan] {
+        padding: 3rem 1.5rem !important;
+        text-align: center !important;
+        width: 100% !important;
     }
 }

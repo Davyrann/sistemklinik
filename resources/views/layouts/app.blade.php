@@ -19,21 +19,27 @@
 
         @stack('styles')
     </head>
-    <body class="font-sans antialiased bg-bg text-text">
-        <div class="min-h-screen bg-bg">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased bg-bg text-text selection:bg-primary-100">
+        <div class="min-h-screen bg-bg flex flex-col md:flex-row" x-data="{ sidebarOpen: false }">
+            <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-700 focus:text-white focus:rounded-md">Lewati ke konten utama</a>
 
-            @isset($header)
-                <header class="bg-surface border-b border-border shadow-sm">
-                    <div class="max-w-7xl mx-auto min-h-20 px-4 sm:px-6 lg:px-8 flex items-center">
-                        <div class="w-full">{{ $header }}</div>
-                    </div>
-                </header>
-            @endisset
+            <x-app-sidebar />
 
-            <main>
-                {{ $slot }}
-            </main>
+            <div class="flex-1 flex flex-col min-w-0">
+                <x-app-topbar :title="$title ?? null" />
+
+                @isset($header)
+                    <header class="bg-surface border-b border-border shadow-xs">
+                        <div class="max-w-[1440px] mx-auto px-4 py-4 md:px-6 md:py-4">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endisset
+
+                <main id="main-content" class="flex-1 w-full max-w-[1440px] mx-auto px-4 py-4 md:px-6 md:py-6 space-y-6">
+                    {{ $slot }}
+                </main>
+            </div>
         </div>
 
         @stack('scripts')
