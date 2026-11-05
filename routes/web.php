@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Admin\PoliController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Dokter\DashboardController as DokterDashboardController;
+use App\Http\Controllers\Dokter\PemeriksaanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Resepsionis\DashboardController;
 use App\Http\Controllers\Resepsionis\KunjunganController;
@@ -35,6 +38,14 @@ Route::middleware(['auth', 'role:resepsionis,admin'])->group(function () {
     Route::get('obat/{obat}', [ObatController::class, 'show'])->name('obat.show');
 });
 
+Route::middleware(['auth', 'role:dokter,admin'])->prefix('dokter')->name('dokter.')->group(function () {
+    Route::get('/dashboard', DokterDashboardController::class)->name('dashboard');
+    Route::get('/pemeriksaan/{kunjungan}', [PemeriksaanController::class, 'edit'])->name('pemeriksaan.edit');
+    Route::put('/pemeriksaan/{kunjungan}', [PemeriksaanController::class, 'update'])->name('pemeriksaan.update');
+    Route::patch('/pemeriksaan/{kunjungan}/panggil', [PemeriksaanController::class, 'panggil'])->name('pemeriksaan.panggil');
+    Route::get('/pasien/{pasien}', [PemeriksaanController::class, 'riwayatPasien'])->name('pasien.show');
+});
+
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('user', [UserController::class, 'index'])->name('user.index');
     Route::get('user/create', [UserController::class, 'create'])->name('user.create');
@@ -43,6 +54,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('user/{user}', [UserController::class, 'update'])->name('user.update');
     Route::delete('user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::get('log', LogController::class)->name('log.index');
+    Route::resource('poli', PoliController::class);
 });
 
 Route::middleware('auth')->group(function () {
