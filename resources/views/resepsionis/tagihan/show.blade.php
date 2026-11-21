@@ -310,11 +310,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <x-input-label for="metode" value="Metode Pembayaran (wajib)" />
-                            <x-select-input id="metode" name="metode" x-model="metodeInput" required class="mt-1 block w-full">
-                                @foreach (['tunai' => 'TUNAI', 'transfer' => 'TRANSFER', 'qris' => 'QRIS', 'kartu' => 'KARTU DEBIT/KREDIT', 'penjamin' => 'PENJAMIN / ASURANSI'] as $val => $lbl)
-                                    <option value="{{ $val }}" @selected(old('metode') === $val)>{{ $lbl }}</option>
-                                @endforeach
-                            </x-select-input>
+                            <x-payment-method-select id="metode" name="metode" x-model="metodeInput" required class="mt-1 block w-full" />
                             <x-input-error :messages="$errors->get('metode')" />
                         </div>
 

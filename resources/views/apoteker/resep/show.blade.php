@@ -271,11 +271,8 @@
                                     @csrf
                                     <div class="space-y-1">
                                         <x-input-label for="metode" value="Metode Pembayaran (wajib)" />
-                                        <x-select-input id="metode" name="metode" required class="w-full text-xs">
-                                            <option value="tunai">Tunai</option>
-                                            <option value="transfer">Transfer Bank</option>
-                                            <option value="qris">QRIS</option>
-                                        </x-select-input>
+                                        <x-payment-method-select id="metode" name="metode" required class="w-full text-xs" />
+                                        <x-input-error :messages="$errors->get('metode')" />
                                     </div>
                                     <div class="space-y-1">
                                         <x-input-label for="jumlah" value="Nominal Diterima (wajib)" />

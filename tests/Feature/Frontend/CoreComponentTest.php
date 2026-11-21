@@ -84,6 +84,25 @@ test('select input renders with select styling and touch target', function () {
         ->toContain('pointer-coarse:h-11');
 });
 
+test('payment method select renders all valid payment options and marks selected', function () {
+    $view = Blade::render('<x-payment-method-select selected="qris" class="w-full" />');
+
+    expect($view)->toContain('select-input')
+        ->toContain('name="metode"')
+        ->toContain('id="metode"')
+        ->toContain('value="tunai"')
+        ->toContain('TUNAI')
+        ->toContain('value="transfer"')
+        ->toContain('TRANSFER')
+        ->toContain('value="qris"')
+        ->toContain('QRIS')
+        ->toContain('value="kartu"')
+        ->toContain('KARTU DEBIT/KREDIT')
+        ->toContain('value="penjamin"')
+        ->toContain('PENJAMIN / ASURANSI')
+        ->toContain('selected');
+});
+
 test('input label displays (wajib) tag when required is true instead of asterisk', function () {
     $optionalView = Blade::render('<x-input-label value="Catatan" />');
     expect($optionalView)->toContain('Catatan')
