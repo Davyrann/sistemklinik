@@ -175,7 +175,40 @@
                 $tagihan = $resep->kunjungan->tagihan;
             @endphp
             @if ($tagihan)
-                <div class="bg-surface border border-border rounded-lg p-4 sm:p-6 space-y-4">
+                <div class="bg-surface border border-border rounded-lg p-4 sm:p-6 space-y-4" x-data="{
+                    isLunas: {{ $tagihan->status === 'lunas' ? 'true' : 'false' }},
+                    loading: false,
+                    successMsg: '',
+                    errorMsg: '',
+                    kuitansiUrl: '{{ route('tagihan.kuitansi', $tagihan) }}',
+                    async submitPayment(event) {
+                        this.loading = true;
+                        this.successMsg = '';
+                        this.errorMsg = '';
+                        const form = event.target;
+                        try {
+                            const res = await fetch(form.action, {
+                                method: 'POST',
+                                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                                body: new FormData(form),
+                            });
+                            const data = await res.json();
+                            if (!res.ok) {
+                                this.errorMsg = data.message || 'Terjadi kesalahan saat memproses pembayaran.';
+                                this.loading = false;
+                                return;
+                            }
+                            this.successMsg = data.message || 'Pembayaran berhasil dicatat.';
+                            if (data.status === 'lunas') {
+                                this.isLunas = true;
+                            }
+                            this.loading = false;
+                        } catch (err) {
+                            this.errorMsg = 'Gagal menghubungi server. Silakan coba lagi.';
+                            this.loading = false;
+                        }
+                    }
+                }">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-border">
                         <div>
                             <h2 class="font-semibold text-base text-text">Pemeriksaan Tagihan & Kasir</h2>
@@ -184,7 +217,12 @@
                         <div class="flex items-center gap-2">
                             <span class="text-xs font-mono font-medium text-text-muted">No. Tagihan:</span>
                             <span class="text-xs font-mono font-bold text-text">{{ $tagihan->no_tagihan }}</span>
-                            <x-status-pill :status="$tagihan->status === 'lunas' ? 'success' : 'warning'" :label="$tagihan->status === 'lunas' ? 'Lunas' : 'Belum Bayar'" />
+                            <template x-if="isLunas">
+                                <x-status-pill status="success" label="Lunas" />
+                            </template>
+                            <template x-if="!isLunas">
+                                <x-status-pill status="warning" label="Belum Bayar" />
+                            </template>
                         </div>
                     </div>
 
@@ -208,53 +246,55 @@
 
                         {{-- Form Pembayaran Langsung (Jika Belum Lunas) --}}
                         <div>
-                            @if ($tagihan->status === 'lunas')
-                                <div class="bg-emerald-50 border border-emerald-200 rounded-md p-4 text-xs text-emerald-950 space-y-2">
-                                    <div class="flex items-center gap-2 font-semibold">
-                                        <span>Tagihan Pasien Telah Lunas</span>
-                                    </div>
-                                    <p class="text-text-muted">Pembayaran telah diterima oleh kasir. Obat dapat diserahkan kepada pasien.</p>
-                                    <div class="pt-2">
-                                        <a
-                                            href="{{ route('tagihan.kuitansi', $tagihan) }}"
-                                            target="_blank"
-                                            class="h-9 px-3.5 inline-flex items-center justify-center rounded-md text-xs font-semibold bg-surface border border-border text-text hover:bg-slate-50 transition"
-                                        >
-                                            Cetak Kuitansi Kasir
-                                        </a>
-                                    </div>
+                            <div x-show="successMsg" x-transition class="mb-3 p-3 bg-primary-50 border border-primary-200 text-primary-900 rounded-md text-xs font-medium" x-text="successMsg" style="display: none;"></div>
+                            <div x-show="errorMsg" x-transition class="mb-3 p-3 bg-red-50 border border-red-200 text-danger rounded-md text-xs font-medium" x-text="errorMsg" style="display: none;"></div>
+
+                            <div x-show="isLunas" x-transition class="bg-emerald-50 border border-emerald-200 rounded-md p-4 text-xs text-emerald-950 space-y-2" style="{{ $tagihan->status === 'lunas' ? '' : 'display: none;' }}">
+                                <div class="flex items-center gap-2 font-semibold">
+                                    <span>Tagihan Pasien Telah Lunas</span>
                                 </div>
-                            @else
-                                <div class="border border-border rounded-md p-4 space-y-3 bg-surface">
-                                    <h3 class="text-xs font-semibold text-text">Terima Pembayaran Kasir Sekarang</h3>
-                                    <form method="POST" action="{{ route('tagihan.bayar', $tagihan) }}" class="space-y-3">
-                                        @csrf
-                                        <div class="space-y-1">
-                                            <x-input-label for="metode" value="Metode Pembayaran (wajib)" />
-                                            <x-select-input id="metode" name="metode" required class="w-full text-xs">
-                                                <option value="tunai">Tunai</option>
-                                                <option value="transfer">Transfer Bank</option>
-                                                <option value="qris">QRIS</option>
-                                            </x-select-input>
-                                        </div>
-                                        <div class="space-y-1">
-                                            <x-input-label for="jumlah" value="Nominal Diterima (wajib)" />
-                                            <x-text-input
-                                                id="jumlah"
-                                                name="jumlah"
-                                                type="number"
-                                                min="{{ $tagihan->total_bayar }}"
-                                                value="{{ old('jumlah', $tagihan->total_bayar) }}"
-                                                required
-                                                class="w-full text-xs font-mono"
-                                            />
-                                        </div>
-                                        <x-primary-button type="submit" class="w-full justify-center text-xs h-10">
-                                            Proses Pembayaran & Cetak Kuitansi
-                                        </x-primary-button>
-                                    </form>
+                                <p class="text-text-muted">Pembayaran telah diterima oleh kasir. Obat dapat diserahkan kepada pasien.</p>
+                                <div class="pt-2">
+                                    <a
+                                        :href="kuitansiUrl"
+                                        target="_blank"
+                                        class="h-9 px-3.5 inline-flex items-center justify-center rounded-md text-xs font-semibold bg-surface border border-border text-text hover:bg-slate-50 transition"
+                                    >
+                                        Cetak Kuitansi Kasir
+                                    </a>
                                 </div>
-                            @endif
+                            </div>
+
+                            <div x-show="!isLunas" class="border border-border rounded-md p-4 space-y-3 bg-surface">
+                                <h3 class="text-xs font-semibold text-text">Terima Pembayaran Kasir Sekarang</h3>
+                                <form method="POST" action="{{ route('tagihan.bayar', $tagihan) }}" @submit.prevent="submitPayment" class="space-y-3">
+                                    @csrf
+                                    <div class="space-y-1">
+                                        <x-input-label for="metode" value="Metode Pembayaran (wajib)" />
+                                        <x-select-input id="metode" name="metode" required class="w-full text-xs">
+                                            <option value="tunai">Tunai</option>
+                                            <option value="transfer">Transfer Bank</option>
+                                            <option value="qris">QRIS</option>
+                                        </x-select-input>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <x-input-label for="jumlah" value="Nominal Diterima (wajib)" />
+                                        <x-text-input
+                                            id="jumlah"
+                                            name="jumlah"
+                                            type="number"
+                                            min="{{ $tagihan->total_bayar }}"
+                                            value="{{ old('jumlah', $tagihan->total_bayar) }}"
+                                            required
+                                            class="w-full text-xs font-mono"
+                                        />
+                                    </div>
+                                    <x-primary-button type="submit" class="w-full justify-center text-xs h-10" ::disabled="loading">
+                                        <span x-show="!loading">Proses Pembayaran & Cetak Kuitansi</span>
+                                        <span x-show="loading" style="display: none;">Memproses...</span>
+                                    </x-primary-button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

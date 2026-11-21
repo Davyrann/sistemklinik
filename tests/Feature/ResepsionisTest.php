@@ -86,3 +86,22 @@ test('resepsionis can view obat read-only and pay tagihan', function () {
     ])->assertRedirect();
     expect($tagihan->fresh()->status)->toBe('lunas');
 });
+
+test('resepsionis can pay tagihan via json without page reload', function () {
+    $user = User::where('role', 'resepsionis')->first();
+    $tagihan = Tagihan::where('status', 'belum')->first();
+
+    $response = $this->actingAs($user)->postJson(route('tagihan.bayar', $tagihan), [
+        'metode' => 'qris',
+        'jumlah' => $tagihan->total_bayar,
+        'keterangan' => 'Bayar via QRIS',
+    ]);
+
+    $response->assertOk()
+        ->assertJson([
+            'success' => true,
+            'status' => 'lunas',
+        ]);
+
+    expect($tagihan->fresh()->status)->toBe('lunas');
+});
