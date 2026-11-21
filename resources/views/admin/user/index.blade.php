@@ -59,6 +59,7 @@
                                         'admin' => 'neutral',
                                         'dokter' => 'info',
                                         'resepsionis' => 'neutral',
+                                        'apoteker' => 'warning',
                                         default => 'neutral',
                                     };
                                 @endphp

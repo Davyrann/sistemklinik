@@ -18,9 +18,10 @@ Aplikasi web manajemen operasional klinik rawat jalan berbasis Laravel 12 & PHP 
 
 | Role | Tanggung Jawab Utama |
 |---|---|
-| **Admin** | Kelola akun pengguna (admin, dokter, resepsionis), master data poli, dan audit log aktivitas HTTP. |
+| **Admin** | Kelola akun pengguna (admin, dokter, resepsionis, apoteker), master data poli, dan audit log aktivitas HTTP. |
 | **Resepsionis** | Pendaftaran pasien, pencarian rekam medis, antrean poli, kasir/pembayaran, cetak kuitansi, monitoring stok obat (read-only). |
 | **Dokter** | Antrean pemeriksaan, tanda vital (auto IMT), rekam medis SOAP, diagnosis ICD-10, riwayat medis, dan e-prescribing terintegrasi tagihan kasir. |
+| **Apoteker & Kasir** | Telaah & verifikasi resep masuk, dispensing obat, cetak etiket, kasir/pembayaran tagihan, cetak kuitansi, dan manajemen stok obat (restock/koreksi). |
 
 ---
 
@@ -94,6 +95,7 @@ sistemklinik/
 │   ├── Http/
 │   │   ├── Controllers/
 │   │   │   ├── Admin/              # UserController, LogController, PoliController
+│   │   │   ├── Apoteker/           # DashboardController, ResepController, ObatController
 │   │   │   ├── Auth/               # Autentikasi Breeze
 │   │   │   ├── Dokter/             # DashboardController, PemeriksaanController
 │   │   │   └── Resepsionis/        # Dashboard, Pasien, Kunjungan, Obat, Tagihan
@@ -111,6 +113,7 @@ sistemklinik/
 │   ├── css/                        # Tailwind CSS v4 design tokens & touch utilities
 │   └── views/
 │       ├── admin/                  # Blade UI admin (user, log aktivitas, master poli)
+│       ├── apoteker/               # Blade UI farmasi & kasir (resep masuk, verifikasi, etiket, stok)
 │       ├── dokter/                 # Blade UI dokter (antrean, pemeriksaan SOAP, e-resep)
 │       ├── resepsionis/            # Blade UI pasien, kunjungan, tagihan, obat
 │       ├── components/             # Komponen Blade reusable (datatable, button, modal, status-pill, allergy-banner, dll.)
@@ -122,6 +125,7 @@ sistemklinik/
     └── Feature/
         ├── AdminPoliTest.php       # Pest tests master poli admin
         ├── AdminTest.php           # Pest tests modul admin (user, audit log)
+        ├── ApotekerTest.php        # Pest tests modul apoteker, resep, dispensing, etiket, & kasir
         ├── DokterTest.php          # Pest tests modul antrean, SOAP, ICD-10, & e-resep dokter
         ├── ResepsionisTest.php     # Pest tests modul pasien, antrean, tagihan, obat
         └── Frontend/               # Pest tests kontrak desain mobile-first & audit anti-slop
@@ -133,7 +137,7 @@ sistemklinik/
 
 ### Selesai (Completed)
 - [x] Autentikasi & session guard (Laravel Breeze).
-- [x] Role-based access control (`admin`, `resepsionis`, `dokter`).
+- [x] Role-based access control (`admin`, `resepsionis`, `dokter`, `apoteker`).
 - [x] **Desain Antarmuka Mobile-First & Anti-Slop UI (DESIGN.md)**:
   - [x] Design tokens terstandarisasi: Slate-900 typography, Medical Teal accent, status semantik, matte surfaces.
   - [x] Standar sentuh mobile 44px+ (`@media (pointer: coarse)`), isolasi horizontal scroll table, off-canvas navigation drawer.
@@ -159,16 +163,19 @@ sistemklinik/
   - [x] Sinkronisasi otomatis resep dokter ke rincian tagihan kasir (`tagihan_detail`).
   - [x] Pengurangan otomatis stok obat saat resep difinalisasi.
   - [x] Riwayat rekam medis dan pengobatan pasien sebelumnya.
+- [x] **Modul Apoteker & Kasir (Farmasi)**:
+  - [x] Dashboard antrean farmasi & kasir terpadu (`apoteker.dashboard`).
+  - [x] Antrean resep masuk urut terlama menunggu di atas dengan filter status (`menunggu`, `diproses`, `diserahkan`).
+  - [x] Telaah klinis resep: pengecekan riwayat alergi pasien, dosis, dan ketersediaan stok obat.
+  - [x] Alur dispensing obat: siklus status resep (`menunggu` / `draft` → `diproses` → `diserahkan`).
+  - [x] Cetak etiket / label obat monokrom resmi untuk bungkus obat.
+  - [x] Kasir terpadu: penerimaan pembayaran tagihan (tunai/transfer/QRIS) & cetak kuitansi resmi.
+  - [x] Manajemen inventaris obat: monitoring stok menipis/habis dan penyesuaian stok (*restock* / koreksi) dengan alasan wajib tercatat.
 - [x] Skema database lengkap (Poli, Dokter, Pasien, Kunjungan, Tanda Vital, Rekam Medis, Diagnosis ICD-10, Obat, Resep, Resep Detail, Tagihan, Tagihan Detail, Pembayaran, Activity Log).
 - [x] Seeder data awal komprehensif (`KlinikSeeder`).
-- [x] Automated testing lengkap via Pest PHP (108 tests / 751 assertions, 100% lulus).
+- [x] Automated testing lengkap via Pest PHP (119 tests / 784 assertions, 100% lulus).
 
 ### Rencana Pengembangan (TODO / Backlog)
-- [ ] **Modul Farmasi / Apotek Khusus**:
-  - [ ] Antrean peracikan resep masuk untuk petugas farmasi.
-  - [ ] Alur dispensing & status resep terpisah (`draft` → `diproses` → `diserahkan`).
-  - [ ] Verifikasi telaah resep (dosis, alergi, duplikasi) oleh farmasis.
-  - [ ] Manajemen inventaris obat (stok masuk, supplier, tanggal kedaluwarsa, alert stok minimum).
 - [ ] **Fitur Pelengkap Kasir & Resepsionis**:
   - [ ] Cetak nomor antrean / tiket fisik pendaftaran.
   - [ ] Pembatalan pembayaran / void tagihan kasir berotorisasi.
@@ -198,9 +205,10 @@ Password semua akun: `password`
 
 | Role | Email | Akses Utama |
 |---|---|---|
-| Admin | `admin@klinik.com` | `/admin/user`, `/admin/log`, seluruh rute resepsionis |
+| Admin | `admin@klinik.com` | `/admin/user`, `/admin/log`, seluruh rute resepsionis & apoteker |
 | Resepsionis | `resepsionis@klinik.com` | `/resepsionis`, `/pasien`, `/kunjungan`, `/tagihan`, `/obat` |
 | Dokter | `dokter@klinik.com` | Alur pemeriksaan dokter |
+| Apoteker | `apoteker@klinik.com` | `/apoteker`, `/apoteker/resep`, `/tagihan`, `/apoteker/obat` |
 
 ### Cara Menjalankan
 

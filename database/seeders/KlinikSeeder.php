@@ -41,6 +41,12 @@ class KlinikSeeder extends Seeder
         );
         $admin->update(['role' => 'admin']);
 
+        $apoteker = User::firstOrCreate(
+            ['email' => 'apoteker@klinik.com'],
+            ['name' => 'Apoteker & Kasir', 'password' => Hash::make('password'), 'role' => 'apoteker', 'email_verified_at' => now()],
+        );
+        $apoteker->update(['role' => 'apoteker']);
+
         $poliUmum = Poli::firstOrCreate(['kode' => 'UMUM'], ['nama' => 'Poli Umum', 'deskripsi' => 'Layanan umum', 'is_aktif' => true]);
         $poliGigi = Poli::firstOrCreate(['kode' => 'GIGI'], ['nama' => 'Poli Gigi', 'deskripsi' => 'Kesehatan gigi dan mulut', 'is_aktif' => true]);
         $poliKia = Poli::firstOrCreate(['kode' => 'KIA'], ['nama' => 'Poli KIA', 'deskripsi' => 'Kesehatan ibu dan anak', 'is_aktif' => true]);

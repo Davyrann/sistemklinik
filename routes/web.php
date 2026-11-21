@@ -3,6 +3,9 @@
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\PoliController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Apoteker\DashboardController as ApotekerDashboardController;
+use App\Http\Controllers\Apoteker\ObatController as ApotekerObatController;
+use App\Http\Controllers\Apoteker\ResepController as ApotekerResepController;
 use App\Http\Controllers\Dokter\DashboardController as DokterDashboardController;
 use App\Http\Controllers\Dokter\PemeriksaanController;
 use App\Http\Controllers\ProfileController;
@@ -22,6 +25,10 @@ Route::get('/dashboard', function () {
         return redirect()->route('dokter.dashboard');
     }
 
+    if (auth()->user()?->role === 'apoteker') {
+        return redirect()->route('apoteker.dashboard');
+    }
+
     return app(DashboardController::class)();
 })->middleware(['auth'])->name('dashboard');
 
@@ -30,12 +37,26 @@ Route::middleware(['auth', 'role:resepsionis,admin'])->group(function () {
     Route::resource('pasien', PasienController::class);
     Route::resource('kunjungan', KunjunganController::class)->except(['edit', 'update']);
     Route::patch('kunjungan/{kunjungan}/status', [KunjunganController::class, 'updateStatus'])->name('kunjungan.status');
+});
+
+Route::middleware(['auth', 'role:resepsionis,admin,apoteker'])->group(function () {
     Route::get('tagihan', [TagihanController::class, 'index'])->name('tagihan.index');
     Route::get('tagihan/{tagihan}', [TagihanController::class, 'show'])->name('tagihan.show');
     Route::post('tagihan/{tagihan}/bayar', [TagihanController::class, 'bayar'])->name('tagihan.bayar');
     Route::get('tagihan/{tagihan}/kuitansi', [TagihanController::class, 'kuitansi'])->name('tagihan.kuitansi');
     Route::get('obat', [ObatController::class, 'index'])->name('obat.index');
     Route::get('obat/{obat}', [ObatController::class, 'show'])->name('obat.show');
+});
+
+Route::middleware(['auth', 'role:apoteker,admin'])->prefix('apoteker')->name('apoteker.')->group(function () {
+    Route::get('/', ApotekerDashboardController::class);
+    Route::get('/dashboard', ApotekerDashboardController::class)->name('dashboard');
+    Route::get('/resep', [ApotekerResepController::class, 'index'])->name('resep.index');
+    Route::get('/resep/{resep}', [ApotekerResepController::class, 'show'])->name('resep.show');
+    Route::patch('/resep/{resep}/status', [ApotekerResepController::class, 'updateStatus'])->name('resep.status');
+    Route::get('/resep/{resep}/etiket', [ApotekerResepController::class, 'etiket'])->name('resep.etiket');
+    Route::get('/obat', [ApotekerObatController::class, 'index'])->name('obat.index');
+    Route::post('/obat/{obat}/adjust', [ApotekerObatController::class, 'adjustStock'])->name('obat.adjust');
 });
 
 Route::middleware(['auth', 'role:dokter,admin'])->prefix('dokter')->name('dokter.')->group(function () {

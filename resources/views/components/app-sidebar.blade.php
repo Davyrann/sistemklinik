@@ -44,6 +44,33 @@
                 'icon' => 'stethoscope',
             ],
         ];
+    } elseif ($role === 'apoteker') {
+        $menuItems = [
+            [
+                'label' => 'Dashboard',
+                'route' => route('apoteker.dashboard'),
+                'active' => request()->routeIs('apoteker.dashboard') || (request()->routeIs('dashboard') && $role === 'apoteker'),
+                'icon' => 'home',
+            ],
+            [
+                'label' => 'Resep Masuk',
+                'route' => route('apoteker.resep.index'),
+                'active' => request()->routeIs('apoteker.resep.*'),
+                'icon' => 'queue',
+            ],
+            [
+                'label' => 'Tagihan & Kasir',
+                'route' => route('tagihan.index'),
+                'active' => request()->routeIs('tagihan.*'),
+                'icon' => 'billing',
+            ],
+            [
+                'label' => 'Stok Obat',
+                'route' => route('apoteker.obat.index'),
+                'active' => request()->routeIs('apoteker.obat.*'),
+                'icon' => 'medicine',
+            ],
+        ];
     } elseif ($role === 'admin') {
         $menuItems = [
             [
@@ -62,6 +89,12 @@
                 'label' => 'Kunjungan & Antrean',
                 'route' => route('kunjungan.index'),
                 'active' => request()->routeIs('kunjungan.*'),
+                'icon' => 'queue',
+            ],
+            [
+                'label' => 'Resep & Apotek',
+                'route' => route('apoteker.resep.index'),
+                'active' => request()->routeIs('apoteker.resep.*'),
                 'icon' => 'queue',
             ],
             [

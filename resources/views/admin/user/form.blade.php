@@ -40,7 +40,7 @@
                         <div class="space-y-1">
                             <x-input-label for="role" value="Peran" :required="true" />
                             <x-select-input id="role" name="role" x-model="role" required class="w-full">
-                                @foreach (['admin' => 'Admin', 'dokter' => 'Dokter', 'resepsionis' => 'Resepsionis'] as $key => $label)
+                                @foreach (['admin' => 'Admin', 'dokter' => 'Dokter', 'resepsionis' => 'Resepsionis', 'apoteker' => 'Apoteker / Kasir'] as $key => $label)
                                     <option value="{{ $key }}" @selected(old('role', $user->role) === $key)>{{ $label }}</option>
                                 @endforeach
                             </x-select-input>
