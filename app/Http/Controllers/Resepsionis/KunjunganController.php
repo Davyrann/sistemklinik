@@ -45,6 +45,10 @@ class KunjunganController extends Controller
         $dokters = Dokter::with('poli')->where('is_aktif', true)->orderBy('nama')->get();
         $pasiens = Pasien::orderBy('nama')->limit(100)->get(['id', 'no_rm', 'nama', 'tgl_lahir']);
 
+        if ($pasien && ! $pasiens->contains('id', $pasien->id)) {
+            $pasiens->prepend($pasien);
+        }
+
         return view('resepsionis.kunjungan.form', compact('pasien', 'polis', 'dokters', 'pasiens'));
     }
 

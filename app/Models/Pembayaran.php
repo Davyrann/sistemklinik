@@ -18,6 +18,17 @@ class Pembayaran extends Model
         'penjamin' => 'PENJAMIN / ASURANSI',
     ];
 
+    /**
+     * @var array<string, string>
+     */
+    public const METODE_DESKRIPSI = [
+        'tunai' => 'Pembayaran uang tunai kasir',
+        'transfer' => 'Transfer bank / Virtual Account / EDC',
+        'qris' => 'Scan QRIS statis / dinamis',
+        'kartu' => 'Kartu debit / kredit perbankan',
+        'penjamin' => 'Klaim asuransi rekanan / BPJS',
+    ];
+
     protected $table = 'pembayaran';
 
     protected $fillable = ['tagihan_id', 'metode', 'jumlah', 'tgl_bayar', 'kasir_id', 'keterangan'];

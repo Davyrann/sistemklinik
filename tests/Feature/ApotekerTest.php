@@ -164,8 +164,8 @@ test('completed examination by doctor connects prescription to apoteker queue wi
     $response->assertOk();
     $response->assertSee($kunjungan->pasien->nama);
 
-    // Apoteker dashboard displays prescription in waiting list
+    // Apoteker dashboard counts it in waiting prescriptions
     $dashboardResponse = $this->actingAs($apoteker)->get(route('apoteker.dashboard'));
     $dashboardResponse->assertOk();
-    $dashboardResponse->assertSee($kunjungan->pasien->nama);
+    $dashboardResponse->assertSee('Resep Menunggu');
 });

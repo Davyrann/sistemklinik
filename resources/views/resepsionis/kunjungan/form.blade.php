@@ -14,6 +14,17 @@
         </div>
     </x-slot>
 
+    @php
+        $initialPasienId = (string) old('pasien_id', $pasien?->id ?? '');
+        $pasiensData = $pasiens->map(fn($p) => [
+            'id' => (string) $p->id,
+            'no_rm' => $p->no_rm,
+            'nama' => $p->nama,
+            'tgl_lahir' => $p->tgl_lahir ? $p->tgl_lahir->format('d M Y') : '-',
+            'display' => $p->no_rm . ' — ' . $p->nama,
+        ])->values();
+    @endphp
+
     <div class="py-6">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-surface border border-border shadow-sm rounded-lg p-4 md:p-6">
@@ -27,16 +38,106 @@
                             <p class="text-xs text-text-muted">Pilih pasien yang terdaftar di sistem klinik</p>
                         </div>
 
-                        <div>
-                            <x-input-label for="pasien_id" value="Pasien" :required="true" />
-                            <x-select-input id="pasien_id" name="pasien_id" required class="mt-1 block w-full">
-                                <option value="">— Pilih pasien —</option>
-                                @foreach ($pasiens as $p)
-                                    <option value="{{ $p->id }}" @selected((string) old('pasien_id', $pasien?->id) === (string) $p->id)>
-                                        {{ $p->no_rm }} — {{ $p->nama }} ({{ $p->tgl_lahir ? $p->tgl_lahir->format('d M Y') : '-' }})
-                                    </option>
-                                @endforeach
-                            </x-select-input>
+                        <div
+                            class="relative"
+                            x-data="{
+                                open: false,
+                                search: '',
+                                selectedId: '{{ $initialPasienId }}',
+                                pasiens: {{ Js::from($pasiensData) }},
+                                init() {
+                                    if (this.selectedId) {
+                                        const found = this.pasiens.find(p => String(p.id) === String(this.selectedId));
+                                        if (found) {
+                                            this.search = found.display;
+                                        }
+                                    }
+                                },
+                                get filtered() {
+                                    if (!this.search) return this.pasiens;
+                                    const q = this.search.toLowerCase();
+                                    return this.pasiens.filter(p =>
+                                        (p.nama && p.nama.toLowerCase().includes(q)) ||
+                                        (p.no_rm && p.no_rm.toLowerCase().includes(q))
+                                    );
+                                },
+                                select(p) {
+                                    this.selectedId = p.id;
+                                    this.search = p.display;
+                                    this.open = false;
+                                },
+                                clear() {
+                                    this.selectedId = '';
+                                    this.search = '';
+                                }
+                            }"
+                            @click.outside="open = false"
+                        >
+                            <x-input-label for="pasien_search" value="Pasien" :required="true" />
+                            <input type="hidden" name="pasien_id" id="pasien_id" :value="selectedId" required>
+
+                            <div class="relative mt-1">
+                                <input
+                                    id="pasien_search"
+                                    type="text"
+                                    x-model="search"
+                                    @focus="open = true"
+                                    @input="open = true; if (!search) selectedId = ''"
+                                    @keydown.escape="open = false"
+                                    placeholder="Ketik nama atau No. RM pasien..."
+                                    autocomplete="off"
+                                    class="block w-full h-9 px-3 pr-9 border border-border rounded-md shadow-xs bg-surface text-sm text-text placeholder:text-text-subtle focus:border-primary-600 focus:ring-2 focus:ring-primary-600/20 focus:outline-none transition pointer-coarse:h-11"
+                                />
+                                <button
+                                    type="button"
+                                    x-show="search"
+                                    @click="clear()"
+                                    class="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full text-text-muted hover:text-text hover:bg-slate-200 transition"
+                                    title="Bersihkan pilihan pasien"
+                                    aria-label="Bersihkan pilihan pasien"
+                                    style="display: none;"
+                                >
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                            </div>
+
+                            {{-- Dropdown Hasil Pencarian Pasien --}}
+                            <div
+                                x-show="open"
+                                x-transition:enter="transition ease-out duration-150"
+                                x-transition:enter-start="opacity-0 translate-y-1 scale-98"
+                                x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                x-transition:leave="transition ease-in duration-100"
+                                x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                x-transition:leave-end="opacity-0 translate-y-1 scale-98"
+                                class="absolute z-50 left-0 right-0 mt-1 max-h-56 overflow-y-auto bg-surface border border-border rounded-md shadow-lg divide-y divide-border"
+                                style="display: none;"
+                            >
+                                <template x-for="p in filtered" :key="p.id">
+                                    <div
+                                        @click="select(p)"
+                                        class="px-4 py-2.5 hover:bg-primary-50 cursor-pointer transition duration-150"
+                                        :class="String(selectedId) === String(p.id) ? 'bg-primary-50/70 font-semibold' : ''"
+                                    >
+                                        <div class="flex justify-between items-center">
+                                            <div class="font-medium text-sm text-text">
+                                                <span x-text="p.nama"></span>
+                                            </div>
+                                            <div class="font-mono text-xs font-semibold text-primary-700" x-text="p.no_rm"></div>
+                                        </div>
+                                        <div class="text-xs text-text-muted mt-0.5 flex items-center gap-2">
+                                            <span>Tgl. Lahir: <span x-text="p.tgl_lahir"></span></span>
+                                        </div>
+                                    </div>
+                                </template>
+                                <div x-show="filtered.length === 0" class="px-4 py-3 text-xs text-text-muted text-center">
+                                    Pasien tidak ditemukan.
+                                    <a href="{{ route('pasien.create') }}" class="underline text-primary-700 hover:text-primary-800 font-semibold ms-1">
+                                        Daftarkan pasien baru
+                                    </a>
+                                </div>
+                            </div>
+
                             <p class="text-xs text-text-muted mt-1">
                                 Jika pasien baru belum terdaftar, silakan <a href="{{ route('pasien.create') }}" class="underline text-primary-700 hover:text-primary-600">tambahkan pasien baru</a> terlebih dahulu.
                             </p>
