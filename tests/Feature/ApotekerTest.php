@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Kunjungan;
 use App\Models\Obat;
 use App\Models\Resep;
 use App\Models\Tagihan;
@@ -133,4 +134,38 @@ test('admin can access apoteker routes', function () {
 
     $this->actingAs($admin)->get(route('apoteker.dashboard'))->assertOk();
     $this->actingAs($admin)->get(route('apoteker.resep.index'))->assertOk();
+});
+
+test('completed examination by doctor connects prescription to apoteker queue with waiting status', function () {
+    $dokterUser = User::where('role', 'dokter')->first();
+    $apoteker = User::where('role', 'apoteker')->first();
+    $kunjungan = Kunjungan::where('status', 'menunggu')->first();
+    $obat = Obat::where('stok', '>=', 10)->first();
+
+    $this->actingAs($dokterUser)->put(route('dokter.pemeriksaan.update', $kunjungan), [
+        'subjective' => 'Pasien flu batuk',
+        'resep_items' => [
+            [
+                'obat_id' => $obat->id,
+                'jumlah' => 3,
+                'dosis' => '3x1 tablet',
+                'aturan_pakai' => 'Sesudah makan',
+            ],
+        ],
+        'action' => 'selesai',
+    ])->assertRedirect(route('dokter.dashboard'));
+
+    $resep = $kunjungan->fresh()->resep;
+    expect($resep)->not->toBeNull();
+    expect($resep->status)->toBe('menunggu');
+
+    // Apoteker sees prescription in waiting queue
+    $response = $this->actingAs($apoteker)->get(route('apoteker.resep.index', ['status' => 'menunggu']));
+    $response->assertOk();
+    $response->assertSee($kunjungan->pasien->nama);
+
+    // Apoteker dashboard displays prescription in waiting list
+    $dashboardResponse = $this->actingAs($apoteker)->get(route('apoteker.dashboard'));
+    $dashboardResponse->assertOk();
+    $dashboardResponse->assertSee($kunjungan->pasien->nama);
 });

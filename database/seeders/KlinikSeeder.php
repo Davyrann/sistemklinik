@@ -157,7 +157,7 @@ class KlinikSeeder extends Seeder
                 $resep = Resep::create([
                     'kunjungan_id' => $kunjungan->id,
                     'dokter_id' => $dokter->id,
-                    'status' => $kunjungan->status === 'selesai' ? 'diserahkan' : 'draft',
+                    'status' => $kunjungan->status === 'selesai' ? fake()->randomElement(['menunggu', 'diproses', 'diserahkan']) : 'draft',
                 ]);
 
                 foreach ($obats->random(rand(1, 3)) as $obat) {

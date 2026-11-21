@@ -149,6 +149,10 @@ test('dokter can complete examination, lock rekam medis, decrement medicine stoc
     $obatDetail = $tagihan->details()->where('jenis', 'obat')->first();
     expect($obatDetail)->not->toBeNull();
     expect((int) $obatDetail->qty)->toBe(5);
+
+    // Resep terhubung ke antrean apoteker dengan status menunggu
+    expect($kunjungan->resep)->not->toBeNull();
+    expect($kunjungan->resep->status)->toBe('menunggu');
 });
 
 test('dokter can complete examination when frekuensi is omitted in resep items', function () {

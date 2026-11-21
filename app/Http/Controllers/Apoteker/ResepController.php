@@ -101,6 +101,15 @@ class ResepController extends Controller
         $oldStatus = $resep->status;
         $newStatus = $validated['status'];
 
+        if ($oldStatus !== 'batal' && $newStatus === 'batal') {
+            // Pulihkan stok obat bila resep dibatalkan
+            foreach ($resep->details as $detail) {
+                if ($detail->obat) {
+                    $detail->obat->increment('stok', $detail->jumlah);
+                }
+            }
+        }
+
         $resep->update(['status' => $newStatus]);
 
         $message = match ($newStatus) {

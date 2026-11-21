@@ -156,7 +156,7 @@ class PemeriksaanController extends Controller
                     ['kunjungan_id' => $kunjungan->id],
                     [
                         'dokter_id' => $dokterId,
-                        'status' => $isLocked ? 'diserahkan' : 'draft',
+                        'status' => $isLocked ? 'menunggu' : 'draft',
                         'catatan' => $validated['resep_catatan'] ?? null,
                     ]
                 );
@@ -202,6 +202,22 @@ class PemeriksaanController extends Controller
                         }
                     }
 
+                    $totalSubtotal = (float) $tagihan->details()->sum('subtotal');
+                    $diskon = (float) ($tagihan->diskon ?? 0);
+                    $tagihan->update([
+                        'total' => $totalSubtotal,
+                        'total_bayar' => max(0, $totalSubtotal - $diskon),
+                    ]);
+                }
+            } else {
+                if ($kunjungan->resep) {
+                    $kunjungan->resep->details()->delete();
+                    $kunjungan->resep->delete();
+                }
+
+                $tagihan = $kunjungan->tagihan;
+                if ($tagihan) {
+                    $tagihan->details()->where('jenis', 'obat')->delete();
                     $totalSubtotal = (float) $tagihan->details()->sum('subtotal');
                     $diskon = (float) ($tagihan->diskon ?? 0);
                     $tagihan->update([
