@@ -1,87 +1,76 @@
 # Hak Akses Per Role
 
-Referensi kapabilitas per role. Sumber desain: `DESIGN.md` §2. Fokus pengerjaan sekarang: **Resepsionis**.
+Referensi kapabilitas per role. Sumber desain: `DESIGN.md` §2.
 
-## Status kode saat ini
+## Status Kode Saat Ini
 
-- Role di DB: enum `users.role` = `resepsionis`, `dokter` (belum ada `admin`).
-- Middleware: `role` alias → `App\Http\Middleware\EnsureRole`, dipakai di `routes/web.php`.
-- Controller baru ada di namespace `App\Http\Controllers\Resepsionis`.
-- Route `dokter.dashboard` sudah direferensikan di `routes/web.php` tapi belum dibuat.
+- Role di DB: enum `users.role` = `admin`, `resepsionis`, `dokter`.
+- Middleware: `role` alias → `App\Http\Middleware\EnsureRole`, dipakai di `routes/web.php` untuk membatasi akses per modul.
+- Controller aktif:
+  - `App\Http\Controllers\Admin`: `UserController`, `LogController`, `PoliController`.
+  - `App\Http\Controllers\Resepsionis`: `DashboardController`, `PasienController`, `KunjunganController`, `TagihanController`, `ObatController`.
+  - `App\Http\Controllers\Dokter`: `DashboardController`, `PemeriksaanController`.
+- Seluruh antarmuka telah dimigrasikan ke standar **Mobile-First Responsive** dengan verifikasi otomatis via Pest (`DesignGateAuditTest`).
 
-## Matriks kapabilitas
+## Matriks Kapabilitas
 
-| Modul | Admin | Resepsionis | Dokter | Apoteker | Kasir |
+| Modul | Admin | Resepsionis | Dokter | Apoteker (Backlog) | Kasir (Backlog) |
 |---|---|---|---|---|---|
 | Pasien (CRUD) | CRUD | CRUD | Read | Read | Read |
-| Kunjungan (CRUD + status) | CRUD | CRUD (tanpa edit/update) | Read (antrean sendiri) + update status pemeriksaan | — | Read |
-| Antrean (panggil/lewati/tunda) | Read | Update status | Update status | — | — |
-| Rekam medis / anamnesis / diagnosis | Read | Read | CRUD | — | — |
-| Tanda vital | Read | Read | Read | — | — |
-| Resep (verifikasi & serah) | Read | Read | Tulis resep | CRUD verifikasi + serah | — |
-| Obat / stok | CRUD | Read | Read | CRUD | Read |
-| Tagihan | Read | Read + terima pembayaran + kuitansi | Read | Read | CRUD + bayar |
-| Pembayaran / kas | Read | Terima bayar | — | — | CRUD |
+| Kunjungan (CRUD + status) | CRUD | CRUD (tanpa edit/update langsung) | Read (antrean poli sendiri) + update status periksa | — | Read |
+| Antrean (panggil / periksa / selesai) | Read | Update status antrean | Panggil antrean & ubah status periksa | — | — |
+| Rekam medis / SOAP / diagnosis ICD-10 | Read | Read | CRUD (dengan mekanisme lock) | — | — |
+| Tanda vital & IMT | Read | Read | Input & kalkulasi otomatis | — | — |
+| Resep obat (e-prescribing) | Read | Read | Tulis resep + auto tagihan | CRUD verifikasi & dispensing | — |
+| Obat / stok | CRUD (via DB/Admin) | Read (katalog & stok) | Read (saat meresepkan) | CRUD inventaris & restock | Read |
+| Tagihan & pembayaran kasir | Read | Terima bayar + cetak kuitansi | Read | Read | CRUD + void bayar |
 | User & role | CRUD | — | — | — | — |
-| Poli, dokter, tarif, jadwal | CRUD | Read | Read | Read | Read |
-| Laporan & dashboard | Full | Dashboard operasional | Dashboard antrean | — | Dashboard kas |
+| Master poli | CRUD | Read | Read | Read | Read |
+| Audit activity log | Read (filter & search) | — | — | — | — |
+| Laporan & dashboard | Dashboard admin & audit log | Dashboard operasional antrean | Dashboard antrean poli | — | Dashboard rekap kas |
 
 Legenda: CRUD = create/read/update/delete; `—` = tidak ada akses.
 
-## 1. Admin
+## 1. Admin (Selesai ✓)
 
-- CRUD pasien.
-- CRUD kunjungan, poli, dokter, tarif, jadwal.
-- Manajemen user & role.
-- Laporan penuh (keuangan, kinerja, stok).
-- Belum ada di enum role → butuh migrasi tambah nilai `admin` + route group `role:admin`.
+- CRUD User (admin, dokter, resepsionis) dengan validasi role dan proteksi penghapusan akun sendiri.
+- CRUD Master Data Poli (kode poli, nama poli, deskripsi, status aktif) terintegrasi penugasan dokter dan antrean kunjungan.
+- Audit Activity Log HTTP: pencatatan otomatis request dengan filter role, status kode, dan pencarian URL/IP.
 
-## 2. Resepsionis (prioritas sekarang)
+## 2. Resepsionis & Kasir (Selesai ✓)
 
-Sudah jalan di `routes/web.php` (middleware `auth`, `role:resepsionis`):
+- Dashboard operasional kunjungan hari ini.
+- CRUD Pasien dengan generator otomatis format `no_rm` unik & pencarian cepat NIK/No. RM.
+- Pembuatan kunjungan poli: otomatis generate nomor antrean unik per poli/tanggal dan tagihan biaya pendaftaran dasar.
+- Manajemen siklus status kunjungan: `menunggu` → `dipanggil` → `diperiksa` → `selesai` / `batal`.
+- Kasir & Pembayaran: rincian tagihan (registrasi + obat dari dokter), pembayaran (tunai/transfer/QRIS), dan cetak kuitansi resmi.
+- Katalog obat read-only untuk pemantauan ketersediaan stok di loket pendaftaran.
 
-| Aksi | Route | Controller |
-|---|---|---|
-| Dashboard | `GET /resepsionis` | `DashboardController` |
-| CRUD pasien (auto `no_rm`) | `Route::resource('pasien')` | `PasienController` |
-| Buat kunjungan + no antrean + tagihan awal | `kunjungan.create/store` | `KunjunganController` |
-| Lihat kunjungan | `kunjungan.index/show` | `KunjunganController` |
-| Ubah status kunjungan (menunggu → dipanggil → diperiksa → selesai/batal) | `PATCH kunjungan/{id}/status` | `KunjunganController::updateStatus` |
-| Hapus kunjungan | `kunjungan.destroy` | `KunjunganController` |
-| Daftar tagihan, detail, terima bayar, kuitansi | `tagihan.*` | `TagihanController` |
-| Daftar & detail obat (read-only) | `obat.index/show` | `ObatController` |
+## 3. Dokter (Selesai ✓)
 
-Catatan:
+- Dashboard antrean poli dokter: daftar pasien hari ini berdasarkan poli penugasan dengan indikator status antrean.
+- Pemanggilan pasien antrean (`panggil`).
+- Pemeriksaan klinis terpadu:
+  - Input tanda vital (tensi, nadi, suhu, RR, SpO2, BB, TB) dengan kalkulasi otomatis IMT.
+  - Form rekam medis format SOAP (Subjective, Objective, Assessment, Plan).
+  - Diagnosis ICD-10 (kode + deskripsi, klasifikasi primer & sekunder).
+  - E-prescribing: resep obat dengan jumlah, dosis, frekuensi, aturan pakai.
+  - Mekanisme finalisasi & penguncian catatan medis (`is_locked` & `locked_at`).
+  - Integrasi otomatis: pembuatan resep otomatis menambahkan item obat ke `tagihan_detail` kasir dan mengurangi stok obat saat pemeriksaan diselesaikan.
+  - Akses riwayat kunjungan dan rekam medis lampau pasien (riwayat medis).
 
-- `kunjungan` sengaja tanpa `edit`/`update` (`.except(['edit','update'])`): data kunjungan diubah lewat ubah status saja.
-- `destroy` pasien menghapus seluruh kunjungan terkait (hard delete).
+## 4. Rencana Pengembangan Selanjutnya (Backlog)
 
-Belum dikerjakan untuk resepsionis:
-
-- Pembatalan pembayaran / void tagihan.
-- Cetak antrean (view kuitansi sudah ada, antrean belum).
-
-## 3. Dokter
-
-- Lihat antrean sendiri, buka detail kunjungan pasien.
-- Tulis anamnesis, diagnosis, tanda vital, resep (SOAP).
-- Ubah status kunjungan ke `selesai`.
-- Butuh: namespace `App\Http\Controllers\Dokter`, route group `role:dokter`, view `dokter/*`.
-
-## 4. Apoteker
-
-- Antrean resep, verifikasi & serah resep.
-- CRUD obat, stok, peringatan interaksi/alergi.
-- Butuh: `role:apoteker` + enum role.
-
-## 5. Kasir
-
-- Tagihan, pembayaran multi metode, kuitansi, laporan kas.
-- Saat ini tumpang tindih dengan resepsionis (`tagihan.*`) → pisah route saat role `kasir` dibuat.
-
-## Urutan pengerjaan
-
-1. Resepsionis (selesai paling akhir di sprint ini): pasien ✓, kunjungan ✓, tagihan ✓, obat read ✓.
-2. Admin: tambah enum role `admin`, route group `role:admin`, CRUD master data.
-3. Dokter: namespace + route + view dokter.
-4. Apoteker, Kasir.
+1. **Apoteker / Farmasi Khusus**:
+   - Pemisahan alur dispensing resep: `draft` → `diproses` (peracikan/telaah) → `diserahkan` (penyerahan obat).
+   - Verifikasi telaah klinis resep oleh farmasis sebelum obat diserahkan.
+   - Manajemen inventaris obat (stok masuk/restock, supplier, tanggal kedaluwarsa, alert stok menipis).
+2. **Fitur Tambahan Kasir**:
+   - Cetak struk/tiket nomor antrean pasien saat pendaftaran selesai.
+   - Mekanisme pembatalan / void pembayaran tagihan kasir dengan otorisasi supervisor.
+   - Penambahan tarif tindakan medis non-konsultasi ke tagihan.
+3. **Laporan & Ekspor**:
+   - Laporan rekapitulasi kunjungan harian/bulanan.
+   - Laporan rekonsiliasi kas kasir harian.
+   - Laporan 10 besar penyakit (morbiditas ICD-10).
+   - Laporan mutasi obat dan ekspor data (Excel/CSV/PDF).

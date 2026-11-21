@@ -43,7 +43,7 @@
 - Consumes: `DESIGN.md` sections 3, 4, 5, 6
 - Produces: CSS custom properties (`--color-bg`, `--color-surface`, `--color-text`, `--color-text-muted`, `--color-text-subtle`, `--color-border`, `--color-border-subtle`, `--primary-*`, `--success-*`, `--warning-*`, `--danger-*`, `--info-*`, `--neutral-*`), strictly constrained spacing scale, mobile touch tap target classes (`@media (pointer: coarse)` -> `h-11`).
 
-- [ ] **Step 1: Write the failing contract test**
+- [x] **Step 1: Write the failing contract test**
 
 ```php
 // tests/Feature/Frontend/DesignTokenContractTest.php
@@ -80,12 +80,12 @@ test('css contains strict tokens and zero banned arbitrary values', function () 
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `php artisan test tests/Feature/Frontend/DesignTokenContractTest.php`
 Expected: FAIL due to missing file or tokens.
 
-- [ ] **Step 3: Implement tokens and utilities in `resources/css/app.css` and `tailwind.config.js`**
+- [x] **Step 3: Implement tokens and utilities in `resources/css/app.css` and `tailwind.config.js`**
 
 Update `resources/css/app.css`:
 - Add full CSS variables for Neutral, Primary 800/900, Status backgrounds and borders (`--success-bg: #F0FDF4`, `--success-bd: #BBF7D0`, etc.).
@@ -98,12 +98,12 @@ Update `tailwind.config.js`:
 - Configure fonts (`Inter`, `"JetBrains Mono"`).
 - Extend colors mapping to CSS variables.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `php artisan test tests/Feature/Frontend/DesignTokenContractTest.php`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add resources/css/app.css tailwind.config.js tests/Feature/Frontend/DesignTokenContractTest.php
@@ -131,7 +131,7 @@ git commit -m "feat(ui): add mobile-first design tokens and touch utilities per 
 - Consumes: CSS tokens from Task 1, `DESIGN.md` Bagian 4, 6.3, 12, 16
 - Produces: Accessible Blade components with `h-9` desktop / `h-11` touch heights, no outer margins, static labels with `(wajib)` support, no decorative arrows or emojis, accessible dialog without blur.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```php
 // tests/Feature/Frontend/CoreComponentTest.php
@@ -165,12 +165,12 @@ test('core components render with correct classes and without banned patterns', 
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `php artisan test tests/Feature/Frontend/CoreComponentTest.php`
 Expected: FAIL due to missing props or classes.
 
-- [ ] **Step 3: Implement components**
+- [x] **Step 3: Implement components**
 
 - `primary-button.blade.php`: `h-9 px-4 gap-2 rounded-md font-semibold text-sm bg-primary-700 hover:bg-primary-800 active:bg-primary-900 text-white focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-colors duration-150 inline-flex items-center justify-center pointer-coarse:h-11`.
 - `secondary-button.blade.php`: `h-9 px-4 gap-2 rounded-md font-medium text-sm bg-surface border border-primary-700 text-primary-700 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-colors duration-150 inline-flex items-center justify-center pointer-coarse:h-11`.
@@ -189,12 +189,12 @@ Expected: FAIL due to missing props or classes.
 - `modal.blade.php`: Solid matte backdrop `bg-slate-900/50` without blur. Card `rounded-lg shadow-lg bg-surface border border-border p-6`.
 - `confirm-dialog.blade.php`: Specialized modal for risky actions (`Batalkan kunjungan`, `Nonaktifkan pengguna`) requiring object name, primary danger action, and secondary cancel action.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `php artisan test tests/Feature/Frontend/CoreComponentTest.php`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add resources/views/components/ tests/Feature/Frontend/CoreComponentTest.php
@@ -221,7 +221,7 @@ git commit -m "feat(ui): refactor core interactive components for mobile-first a
   3. Desktop (>= 1024px): 240px solid white sidebar with logo, grouped role navigation, bottom user block, Topbar 56px with global search (`/`), content max-w-1440px `px-6 py-6 space-y-6`.
   Skip link "Lewati ke konten utama" included.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```php
 // tests/Feature/Frontend/AppShellTest.php
@@ -257,12 +257,12 @@ test('app shell renders mobile drawer, skip link, and role navigation', function
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `php artisan test tests/Feature/Frontend/AppShellTest.php`
 Expected: FAIL due to missing layout markup.
 
-- [ ] **Step 3: Implement App Shell & Navigation**
+- [x] **Step 3: Implement App Shell & Navigation**
 
 - `resources/views/layouts/app.blade.php`:
   - Add Skip link at top: `<a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-700 focus:text-white focus:rounded-md">Lewati ke konten utama</a>`.
@@ -283,12 +283,12 @@ Expected: FAIL due to missing layout markup.
 - `resources/views/layouts/guest.blade.php`:
   - Mobile-first clean canvas: solid `#F1F5F9` background, `#FFFFFF` card, logo, no gradients or slop.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `php artisan test tests/Feature/Frontend/AppShellTest.php`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add resources/views/layouts/ resources/views/components/app-* tests/Feature/Frontend/AppShellTest.php
@@ -315,7 +315,7 @@ git commit -m "feat(ui): implement mobile-first responsive app shell and drawer 
     3. Warning alert when allergy has not yet been asked
   - `<x-stat-card label="..." :value="..." status="default|warning|success" />`: Honest metric card with mono number, no fake trend percentages or sparklines.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```php
 // tests/Feature/Frontend/ClinicalSafetyComponentTest.php
@@ -349,12 +349,12 @@ test('stat card renders honest metric without fake trend or delta', function () 
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `php artisan test tests/Feature/Frontend/ClinicalSafetyComponentTest.php`
 Expected: FAIL due to missing components.
 
-- [ ] **Step 3: Implement components**
+- [x] **Step 3: Implement components**
 
 - `resources/views/components/allergy-banner.blade.php`:
   Implement the 3 discrete states from `DESIGN.md:460-468`:
@@ -372,12 +372,12 @@ Expected: FAIL due to missing components.
   - Metric: `text-2xl font-semibold font-mono text-text` (or warning/success semantic color if specified).
   - Explicitly no fake trend percentages or arrow badges.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `php artisan test tests/Feature/Frontend/ClinicalSafetyComponentTest.php`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add resources/views/components/patient-header.blade.php resources/views/components/allergy-banner.blade.php resources/views/components/stat-card.blade.php tests/Feature/Frontend/ClinicalSafetyComponentTest.php
@@ -402,7 +402,7 @@ git commit -m "feat(ui): add patient header, 3-state allergy banner, and honest 
   - Aligns numbers and currency to the right with `font-mono`.
   - Uses 44px minimum tap targets for pagination buttons on touch devices.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```php
 // tests/Feature/Frontend/DataTableContractTest.php
@@ -418,12 +418,12 @@ test('datatable component styles adhere to design system rhythm', function () {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `php artisan test tests/Feature/Frontend/DataTableContractTest.php`
 Expected: FAIL.
 
-- [ ] **Step 3: Implement Mobile-First DataTable Component**
+- [x] **Step 3: Implement Mobile-First DataTable Component**
 
 Update `resources/views/components/datatable.blade.php`:
 - CSS adjustments matching `DESIGN.md` table rhythm:
@@ -435,12 +435,12 @@ Update `resources/views/components/datatable.blade.php`:
 - Create `resources/views/components/table-container.blade.php`:
   Wrapper for Template A: `bg-surface border border-border shadow-sm rounded-lg p-0 overflow-hidden`.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `php artisan test tests/Feature/Frontend/DataTableContractTest.php`
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add resources/views/components/datatable.blade.php resources/views/components/table-container.blade.php tests/Feature/Frontend/DataTableContractTest.php
@@ -469,7 +469,7 @@ git commit -m "feat(ui): implement mobile-first responsive datatable wrapper"
   - Pasien Form: Template B with 3 distinct groups (`Data Pribadi`, `Kontak`, `Alergi & Penjamin`), `(wajib)` labels, 3-state allergy input (tidak ada vs belum ditanyakan vs input alergen), `Footer aksi: border-t pt-6 gap-3 justify-end [Batal] [Simpan]`.
   - Kunjungan Form: Search patient, select poli & doctor, visit date, visit complaint.
 
-- [ ] **Step 1: Write the failing view test**
+- [x] **Step 1: Write the failing view test**
 
 ```php
 // tests/Feature/Frontend/ResepsionisViewsTest.php
@@ -504,12 +504,12 @@ test('pasien form adheres to Template B with 3-state allergy selector and explic
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `php artisan test tests/Feature/Frontend/ResepsionisViewsTest.php`
 Expected: FAIL.
 
-- [ ] **Step 3: Refactor Resepsionis views**
+- [x] **Step 3: Refactor Resepsionis views**
 
 - `resepsionis/dashboard.blade.php`:
   Implement Template A:
@@ -531,17 +531,17 @@ Expected: FAIL.
 - `resepsionis/kunjungan/index.blade.php` & `show.blade.php`:
   Template A with filter toolbar and status pills.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `php artisan test tests/Feature/Frontend/ResepsionisViewsTest.php`
 Expected: PASS
 
-- [ ] **Step 5: Run full existing feature tests to ensure zero regression**
+- [x] **Step 5: Run full existing feature tests to ensure zero regression**
 
 Run: `php artisan test tests/Feature/ResepsionisTest.php`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add resources/views/resepsionis/ tests/Feature/Frontend/ResepsionisViewsTest.php
@@ -569,7 +569,7 @@ git commit -m "feat(ui): refactor resepsionis views to mobile-first Templates A 
   - `obat/index.blade.php`: Template A with stock status pills (`Menipis`, `Habis`).
   - `obat/show.blade.php`: Medicine detail and batch tracking.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```php
 // tests/Feature/Frontend/TagihanObatViewsTest.php
@@ -603,12 +603,12 @@ test('kuitansi view adheres to print specifications', function () {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `php artisan test tests/Feature/Frontend/TagihanObatViewsTest.php`
 Expected: FAIL.
 
-- [ ] **Step 3: Refactor Tagihan & Obat views**
+- [x] **Step 3: Refactor Tagihan & Obat views**
 
 - `resepsionis/tagihan/index.blade.php`:
   Template A with filter toolbar, status pills (`Belum Bayar`, `Lunas`), right-aligned mono totals.
@@ -625,17 +625,17 @@ Expected: FAIL.
 - `resepsionis/obat/show.blade.php`:
   Template C detail view.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `php artisan test tests/Feature/Frontend/TagihanObatViewsTest.php`
 Expected: PASS
 
-- [ ] **Step 5: Run full existing feature tests to ensure zero regression**
+- [x] **Step 5: Run full existing feature tests to ensure zero regression**
 
 Run: `php artisan test tests/Feature/ResepsionisTest.php`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add resources/views/resepsionis/tagihan/ resources/views/resepsionis/obat/ tests/Feature/Frontend/TagihanObatViewsTest.php
@@ -665,7 +665,7 @@ git commit -m "feat(ui): refactor tagihan, kuitansi print, and obat views to mob
     6. Sticky bottom action bar (`Simpan Draf` secondary, `Selesaikan Pemeriksaan` primary) with `pb-28` container clearance on mobile so it never obscures form inputs.
   - `dokter/pasien.blade.php`: Timeline of past visits, latest on top.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```php
 // tests/Feature/Frontend/DokterViewsTest.php
@@ -701,12 +701,12 @@ test('dokter pemeriksaan view adheres to Template C with sticky patient header a
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `php artisan test tests/Feature/Frontend/DokterViewsTest.php`
 Expected: FAIL.
 
-- [ ] **Step 3: Refactor Dokter views**
+- [x] **Step 3: Refactor Dokter views**
 
 - `dokter/dashboard.blade.php`:
   - Decision-First layout: Top card `Pasien Berikutnya` (`bg-surface border border-border rounded-lg p-4 sm:p-6 space-y-4`). Shows patient name, RM (mono), age, complaints, allergy banner, and `Panggil Pasien` / `Mulai Pemeriksaan`.
@@ -730,17 +730,17 @@ Expected: FAIL.
 - `dokter/pasien.blade.php`:
   - Timeline view with patient history, formatted dates, and diagnoses.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `php artisan test tests/Feature/Frontend/DokterViewsTest.php`
 Expected: PASS
 
-- [ ] **Step 5: Run full existing feature tests to ensure zero regression**
+- [x] **Step 5: Run full existing feature tests to ensure zero regression**
 
 Run: `php artisan test tests/Feature/DokterTest.php`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add resources/views/dokter/ tests/Feature/Frontend/DokterViewsTest.php
@@ -771,7 +771,7 @@ git commit -m "feat(ui): refactor dokter dashboard and examination to mobile-fir
   - `auth/login.blade.php`: Clean mobile-first login card, high contrast, accessible labels.
   - `profile/edit.blade.php`: Template B grouped forms.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```php
 // tests/Feature/Frontend/AdminAuthViewsTest.php
@@ -801,12 +801,12 @@ test('login screen is clean without slop or emoji', function () {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run: `php artisan test tests/Feature/Frontend/AdminAuthViewsTest.php`
 Expected: FAIL.
 
-- [ ] **Step 3: Refactor Admin, Auth, and Profile views**
+- [x] **Step 3: Refactor Admin, Auth, and Profile views**
 
 - `admin/user/index.blade.php`:
   Template A with `<x-table-container>`. Replace native inline `onsubmit="return confirm(...)"` with `<x-confirm-dialog>` component with explicit object name (`Hapus pengguna [nama]?`).
@@ -819,17 +819,17 @@ Expected: FAIL.
 - `profile/edit.blade.php` and partials:
   Template B layout with grouped profile update and password change cards.
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run: `php artisan test tests/Feature/Frontend/AdminAuthViewsTest.php`
 Expected: PASS
 
-- [ ] **Step 5: Run full existing feature tests to ensure zero regression**
+- [x] **Step 5: Run full existing feature tests to ensure zero regression**
 
 Run: `php artisan test tests/Feature/AdminTest.php tests/Feature/Auth/`
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add resources/views/admin/ resources/views/auth/ resources/views/profile/ tests/Feature/Frontend/AdminAuthViewsTest.php
@@ -848,7 +848,7 @@ git commit -m "feat(ui): refactor admin, auth, and profile views to mobile-first
 - Consumes: `DESIGN.md` Bagian 16 (Banned Patterns) & Bagian 17 (Delivery Gate Checklist), `antislop-layoutmobile` checklist
 - Produces: Comprehensive automated regression test asserting 100% compliance across all views in `resources/views/`.
 
-- [ ] **Step 1: Write the automated Design Gate Audit test**
+- [x] **Step 1: Write the automated Design Gate Audit test**
 
 ```php
 // tests/Feature/Frontend/DesignGateAuditTest.php
@@ -888,26 +888,26 @@ test('all blade view files are completely free from banned slop patterns', funct
 });
 ```
 
-- [ ] **Step 2: Run test to identify any remaining violations across the entire codebase**
+- [x] **Step 2: Run test to identify any remaining violations across the entire codebase**
 
 Run: `php artisan test tests/Feature/Frontend/DesignGateAuditTest.php`
 Expected: Any existing violations reported.
 
-- [ ] **Step 3: Fix any reported violations in all views**
+- [x] **Step 3: Fix any reported violations in all views**
 
 Surgically remove any offending classes, emojis, or decorative arrows.
 
-- [ ] **Step 4: Run the full test suite**
+- [x] **Step 4: Run the full test suite**
 
 Run: `php artisan test --compact`
 Expected: 100% PASS across all existing tests and new design contract tests.
 
-- [ ] **Step 5: Run asset build to verify clean bundling**
+- [x] **Step 5: Run asset build to verify clean bundling**
 
 Run: `npm run build`
 Expected: Clean Vite production build with zero errors.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add resources/views/ tests/Feature/Frontend/DesignGateAuditTest.php

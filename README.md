@@ -18,9 +18,9 @@ Aplikasi web manajemen operasional klinik rawat jalan berbasis Laravel 12 & PHP 
 
 | Role | Tanggung Jawab Utama |
 |---|---|
-| **Admin** | Kelola akun pengguna (admin, dokter, resepsionis) dan audit log aktivitas HTTP. |
+| **Admin** | Kelola akun pengguna (admin, dokter, resepsionis), master data poli, dan audit log aktivitas HTTP. |
 | **Resepsionis** | Pendaftaran pasien, pencarian rekam medis, antrean poli, kasir/pembayaran, cetak kuitansi, monitoring stok obat (read-only). |
-| **Dokter** | Anamnesis, rekam medis SOAP, diagnosis ICD-10, dan peresepan obat (e-prescription). |
+| **Dokter** | Antrean pemeriksaan, tanda vital (auto IMT), rekam medis SOAP, diagnosis ICD-10, riwayat medis, dan e-prescribing terintegrasi tagihan kasir. |
 
 ---
 
@@ -93,8 +93,9 @@ sistemklinik/
 ├── app/
 │   ├── Http/
 │   │   ├── Controllers/
-│   │   │   ├── Admin/              # UserController, LogController
+│   │   │   ├── Admin/              # UserController, LogController, PoliController
 │   │   │   ├── Auth/               # Autentikasi Breeze
+│   │   │   ├── Dokter/             # DashboardController, PemeriksaanController
 │   │   │   └── Resepsionis/        # Dashboard, Pasien, Kunjungan, Obat, Tagihan
 │   │   └── Middleware/
 │   │       ├── EnsureRole.php      # Guard otorisasi role
@@ -102,23 +103,28 @@ sistemklinik/
 │   └── Models/                     # User, Pasien, Dokter, Poli, Kunjungan, RekamMedis,
 │                                   # TandaVital, Diagnosis, Obat, Resep, Tagihan, dll.
 ├── database/
-│   ├── migrations/                 # Skema 15+ tabel operasional klinik
+│   ├── migrations/                 # Skema 20+ tabel operasional klinik
 │   └── seeders/
 │       ├── DatabaseSeeder.php
 │       └── KlinikSeeder.php        # Akun default, master obat, poli, dokter, dummy pasien
 ├── resources/
+│   ├── css/                        # Tailwind CSS v4 design tokens & touch utilities
 │   └── views/
-│       ├── admin/                  # Blade UI admin (user & log aktivitas)
+│       ├── admin/                  # Blade UI admin (user, log aktivitas, master poli)
+│       ├── dokter/                 # Blade UI dokter (antrean, pemeriksaan SOAP, e-resep)
 │       ├── resepsionis/            # Blade UI pasien, kunjungan, tagihan, obat
-│       ├── components/             # Komponen Blade reusable (datatable, button, modal, dll.)
-│       └── layouts/                # Master layout & navigasi
+│       ├── components/             # Komponen Blade reusable (datatable, button, modal, status-pill, allergy-banner, dll.)
+│       └── layouts/                # Master layout responsif mobile-first (drawer off-canvas, topbar, desktop sidebar)
 ├── routes/
 │   ├── web.php                     # Definisi route klinik & role grouping
 │   └── auth.php                    # Route autentikasi Breeze
 └── tests/
     └── Feature/
-        ├── AdminTest.php           # Pest tests modul admin
-        └── ResepsionisTest.php     # Pest tests modul resepsionis
+        ├── AdminPoliTest.php       # Pest tests master poli admin
+        ├── AdminTest.php           # Pest tests modul admin (user, audit log)
+        ├── DokterTest.php          # Pest tests modul antrean, SOAP, ICD-10, & e-resep dokter
+        ├── ResepsionisTest.php     # Pest tests modul pasien, antrean, tagihan, obat
+        └── Frontend/               # Pest tests kontrak desain mobile-first & audit anti-slop
 ```
 
 ---
@@ -128,39 +134,51 @@ sistemklinik/
 ### Selesai (Completed)
 - [x] Autentikasi & session guard (Laravel Breeze).
 - [x] Role-based access control (`admin`, `resepsionis`, `dokter`).
-- [x] Modul Admin:
+- [x] **Desain Antarmuka Mobile-First & Anti-Slop UI (DESIGN.md)**:
+  - [x] Design tokens terstandarisasi: Slate-900 typography, Medical Teal accent, status semantik, matte surfaces.
+  - [x] Standar sentuh mobile 44px+ (`@media (pointer: coarse)`), isolasi horizontal scroll table, off-canvas navigation drawer.
+  - [x] Komponen patient safety: Sticky Patient Header, 3-state Allergy Banner, dialog konfirmasi eksplisit.
+  - [x] Automated Design Gate Audit mengeliminasi seluruh pola AI-slop (banned emojis, looping pulse, dekorasi panah, dsb.).
+- [x] **Modul Admin**:
   - [x] CRUD User & proteksi penghapusan akun sendiri.
-  - [x] Audit activity log HTTP dengan filter role, status, dan pencarian.
-- [x] Modul Resepsionis:
+  - [x] CRUD Master Poli (kode poli, nama poli, deskripsi, status aktif).
+  - [x] Audit activity log HTTP dengan filter role, status kode, dan pencarian IP/URL/User.
+- [x] **Modul Resepsionis & Kasir**:
   - [x] CRUD Pasien & auto-redirect pencarian `no_rm` / NIK.
   - [x] Pendaftaran kunjungan poli & generator format no antrean per poli/tanggal.
   - [x] Manajemen status kunjungan (`menunggu`, `dipanggil`, `diperiksa`, `selesai`, `batal`).
-  - [x] Kasir: Rincian tagihan, pembayaran (tunai/transfer/QRIS), dan cetak kuitansi.
-  - [x] Katalog obat read-only & pemantauan stok.
-- [x] Skema database lengkap (Poli, Dokter, Pasien, Kunjungan, Tanda Vital, Rekam Medis, Resep, Tagihan, Pembayaran).
-- [x] Seeder data awal lengkap (`KlinikSeeder`).
-- [x] Automated feature tests via Pest.
+  - [x] Kasir: Rincian tagihan terpadu, pembayaran multi-metode (tunai/transfer/QRIS), dan cetak kuitansi.
+  - [x] Katalog obat read-only & pemantauan ketersediaan stok.
+- [x] **Modul Dokter & Rekam Medis**:
+  - [x] Dashboard antrean periksa dokter real-time per poli/tanggal (`dokter.dashboard`).
+  - [x] Pencatatan tanda vital lengkap & kalkulasi otomatis IMT (Indeks Massa Tubuh).
+  - [x] Form pengisian rekam medis SOAP (Subjective, Objective, Assessment, Plan).
+  - [x] Mekanisme penguncian catatan medis (`is_locked` & `locked_at`).
+  - [x] Input diagnosis dengan autocomplete kode ICD-10 (primer & sekunder).
+  - [x] Pembuatan resep elektronik (e-prescribing) dengan dosis, frekuensi, dan aturan pakai.
+  - [x] Sinkronisasi otomatis resep dokter ke rincian tagihan kasir (`tagihan_detail`).
+  - [x] Pengurangan otomatis stok obat saat resep difinalisasi.
+  - [x] Riwayat rekam medis dan pengobatan pasien sebelumnya.
+- [x] Skema database lengkap (Poli, Dokter, Pasien, Kunjungan, Tanda Vital, Rekam Medis, Diagnosis ICD-10, Obat, Resep, Resep Detail, Tagihan, Tagihan Detail, Pembayaran, Activity Log).
+- [x] Seeder data awal komprehensif (`KlinikSeeder`).
+- [x] Automated testing lengkap via Pest PHP (108 tests / 751 assertions, 100% lulus).
 
 ### Rencana Pengembangan (TODO / Backlog)
-- [ ] **Modul Dokter**:
-  - [ ] Dashboard antrean periksa dokter (`dokter.dashboard`).
-  - [ ] Input pemeriksaan tanda vital lanjutan.
-  - [ ] Form pengisian SOAP rekam medis & mekanisme penguncian catatan medis (`is_locked`).
-  - [ ] Input diagnosis dengan autocomplete kode ICD-10.
-  - [ ] Pembuatan resep elektronik (e-prescribing).
-- [ ] **Modul Farmasi / Apotek**:
-  - [ ] Antrean peracikan resep masuk.
-  - [ ] Dispensing & perubahan status resep (`diproses`, `diserahkan`).
-  - [ ] Otomatisasi pengurangan stok obat saat penyerahan resep.
-  - [ ] Manajemen inventaris obat (stok masuk, supplier, alert stok minimum).
-- [ ] **Integrasi Tagihan Otomatis**:
-  - [ ] Sinkronisasi otomatis item resep dokter ke `tagihan_detail`.
-  - [ ] Dukungan tarif tindakan medis non-konsultasi.
-- [ ] **Laporan & Ekspor**:
-  - [ ] Laporan kunjungan harian & bulanan.
-  - [ ] Laporan pendapatan & rekonsiliasi kasir.
+- [ ] **Modul Farmasi / Apotek Khusus**:
+  - [ ] Antrean peracikan resep masuk untuk petugas farmasi.
+  - [ ] Alur dispensing & status resep terpisah (`draft` → `diproses` → `diserahkan`).
+  - [ ] Verifikasi telaah resep (dosis, alergi, duplikasi) oleh farmasis.
+  - [ ] Manajemen inventaris obat (stok masuk, supplier, tanggal kedaluwarsa, alert stok minimum).
+- [ ] **Fitur Pelengkap Kasir & Resepsionis**:
+  - [ ] Cetak nomor antrean / tiket fisik pendaftaran.
+  - [ ] Pembatalan pembayaran / void tagihan kasir berotorisasi.
+  - [ ] Tarif tindakan medis non-konsultasi (misal: EKG, nebulizer, jahit luka).
+- [ ] **Laporan & Ekspor (Reporting)**:
+  - [ ] Laporan kunjungan harian & bulanan (rekap pasien, filter poli, tren kunjungan).
+  - [ ] Laporan pendapatan & rekonsiliasi kas kasir (tunai vs transfer vs QRIS).
   - [ ] Laporan morbiditas / 10 besar penyakit ICD-10.
   - [ ] Laporan mutasi & pemakaian obat.
+  - [ ] Ekspor data laporan ke format Excel/CSV & PDF.
 - [ ] **Integrasi Eksternal**:
   - [ ] Bridging API BPJS Kesehatan (PCare).
   - [ ] Bridging platform Kemenkes SATUSEHAT (FHIR).
